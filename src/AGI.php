@@ -43,7 +43,7 @@ class AGI
             return;
         }
 
-        while($string != "\n") {
+        while ($string != "\n") {
             // TODO handle if not found
             $colonPosition = strpos($string, ':');
             $name = substr($string, 0, $colonPosition);
@@ -59,10 +59,10 @@ class AGI
      *
      * If the Asterisk verbosity level is $level or greater, send $message to the console.
      *
-     * The Asterisk verbosity system works as follows. The Asterisk user gets to set the desired verbosity at startup time or later
-     * using the console 'set verbose' command. Messages are displayed on the console if their verbose level is less than or equal
-     * to desired verbosity set by the user. More important messages should have a low verbose level; less important messages
-     * should have a high verbose level.
+     * The Asterisk verbosity system works as follows. The Asterisk user gets to set the desired verbosity at startup
+     * time or later using the console 'set verbose' command. Messages are displayed on the console if their verbose
+     * level is less than or equal to desired verbosity set by the user. More important messages should have a low
+     * verbose level; less important messages should have a high verbose level.
      *
      * @link http://www.voip-info.org/wiki-verbose
      * @param string $message
@@ -85,7 +85,7 @@ class AGI
      * @param string $command
      * @return array ('code'=>$code, 'result'=>$result, 'data'=>$data)
      */
-    function evaluate($command)
+    public function evaluate($command)
     {
         $this->getLogger()->debug($command);
 
@@ -110,9 +110,9 @@ class AGI
             }
 
             $this->getLogger()->debug($str);
-        } while($str == '' && $count++ < 5);
+        } while ($str == '' && $count++ < 5);
 
-        if($count >= 5) {
+        if ($count >= 5) {
             return (new Response(Response::CODE_ERROR))->toArray();
         }
 
@@ -120,21 +120,21 @@ class AGI
         $ret['code'] = substr($str, 0, 3);
         $str = trim(substr($str, 3));
 
-        if($str{0} == '-') {// we have a multiline response!
+        if ($str{0} == '-') {// we have a multiline response!
             $count = 0;
             $str = substr($str, 1) . "\n";
             $line = $this->input->readLine();
-            while(substr($line, 0, 3) != $ret['code'] && $count < 5) {
+            while (substr($line, 0, 3) != $ret['code'] && $count < 5) {
                 $str .= $line;
                 $line = $this->input->readLine();
                 $count = (trim($line) == '') ? $count + 1 : 0;
             }
-            if($count >= 5) {
+            if ($count >= 5) {
                 return (new Response(Response::CODE_ERROR))->toArray();
             }
         }
 
-        $ret['result'] = NULL;
+        $ret['result'] = null;
         $ret['data'] = '';
         if ($ret['code'] != Response::CODE_SUCCESS) {
             $ret['data'] = $str;
@@ -143,19 +143,21 @@ class AGI
             // TODO extract to separate method
             $parse = explode(' ', trim($str));
             $in_token = false;
-            foreach($parse as $token)
-            {
+            foreach ($parse as $token) {
                 if($in_token) {// we previously hit a token starting with ')' but not ending in ')'
                     $ret['data'] .= ' ' . trim($token, '() ');
-                    if($token{strlen($token)-1} == ')') $in_token = false;
-                } elseif($token{0} == '(') {
-                    if($token{strlen($token)-1} != ')') $in_token = true;
+                    if ($token{strlen($token)-1} == ')') {
+                        $in_token = false;
+                    }
+                } elseif ($token{0} == '(') {
+                    if ($token{strlen($token)-1} != ')') {
+                        $in_token = true;
+                    }
                     $ret['data'] .= ' ' . trim($token, '() ');
-                } elseif(strpos($token, '=')) {
+                } elseif (strpos($token, '=')) {
                     $token = explode('=', $token);
                     $ret[$token[0]] = $token[1];
-                }
-                elseif($token != '') {
+                } elseif($token != '') {
                     $ret['data'] .= ' ' . $token;
                 }
             }
@@ -163,7 +165,7 @@ class AGI
         }
 
         // log some errors
-        if($ret['result'] < 0) {
+        if ($ret['result'] < 0) {
             $this->getLogger()->debug("$command returned {$ret['result']}");
         }
 
@@ -177,7 +179,8 @@ class AGI
      * @link http://www.voip-info.org/wiki-Asterisk+-+documentation+of+application+commands
      * @param string $application
      * @param mixed $options
-     * @return array, see evaluate for return information. ['result'] is whatever the application returns, or -2 on failure to find application
+     * @return array, see evaluate for return information. ['result'] is whatever the application returns, or -2 on
+     * failure to find application
      */
     function exec($application, $options)
     {
@@ -197,7 +200,8 @@ class AGI
      * @link http://www.voip-info.org/wiki-Asterisk+variables
      * @param string $variable name
      * @param boolean $getvalue return the value only
-     * @return array, see evaluate for return information. ['result'] is 0 if variable hasn't been set, 1 if it has. ['data'] holds the value. returns value if $getvalue is TRUE
+     * @return array, see evaluate for return information. ['result'] is 0 if variable hasn't been set, 1 if it has.
+     * ['data'] holds the value. returns value if $getvalue is TRUE
      */
     function getVariable($variable, $getvalue = false)
     {
