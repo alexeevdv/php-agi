@@ -25,7 +25,7 @@ class StandardOutputStream implements OutputStreamInterface
     {
         try {
             $this->stream = fopen($filename, $mode);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->stream = false;
         }
         if ($this->stream === false) {

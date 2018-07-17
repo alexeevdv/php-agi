@@ -144,7 +144,7 @@ class AGI
             $parse = explode(' ', trim($str));
             $in_token = false;
             foreach ($parse as $token) {
-                if($in_token) {// we previously hit a token starting with ')' but not ending in ')'
+                if ($in_token) {// we previously hit a token starting with ')' but not ending in ')'
                     $ret['data'] .= ' ' . trim($token, '() ');
                     if ($token{strlen($token)-1} == ')') {
                         $in_token = false;
@@ -157,7 +157,7 @@ class AGI
                 } elseif (strpos($token, '=')) {
                     $token = explode('=', $token);
                     $ret[$token[0]] = $token[1];
-                } elseif($token != '') {
+                } elseif ($token != '') {
                     $ret['data'] .= ' ' . $token;
                 }
             }
@@ -182,7 +182,7 @@ class AGI
      * @return array, see evaluate for return information. ['result'] is whatever the application returns, or -2 on
      * failure to find application
      */
-    function exec($application, $options)
+    public function exec($application, $options)
     {
         $this->getLogger()->debug($application);
         if (is_array($options)) {
@@ -203,7 +203,7 @@ class AGI
      * @return array, see evaluate for return information. ['result'] is 0 if variable hasn't been set, 1 if it has.
      * ['data'] holds the value. returns value if $getvalue is TRUE
      */
-    function getVariable($variable, $getvalue = false)
+    public function getVariable($variable, $getvalue = false)
     {
         $result = $this->evaluate("GET VARIABLE $variable");
         if ($getvalue === false) {
@@ -216,7 +216,7 @@ class AGI
      * @param string $name
      * @return string|null
      */
-    function getRequestVariable($name)
+    public function getRequestVariable($name)
     {
         if (isset($this->requestVariables[$name])) {
             return $this->requestVariables[$name];
@@ -238,7 +238,7 @@ class AGI
      * @param string $channel
      * @return array, see evaluate for return information. ['result'] is 1 on success, -1 on failure.
      */
-    function hangup($channel = '')
+    public function hangup($channel = '')
     {
         return $this->evaluate("HANGUP $channel");
     }
