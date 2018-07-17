@@ -2,7 +2,14 @@
 
 namespace alexeevdv\agi;
 
+/**
+ * Interface InputStreamInterface
+ * @package alexeevdv\agi
+ */
 interface InputStreamInterface
 {
-    public function readLine(): ?string;
+    /**
+     * @return string|null
+     */
+    public function readLine();
 }

@@ -5,6 +5,10 @@ namespace alexeevdv\agi;
 use Exception;
 use RuntimeException;
 
+/**
+ * Class StandardInputStream
+ * @package alexeevdv\agi
+ */
 class StandardInputStream implements InputStreamInterface
 {
     /**
@@ -12,6 +16,11 @@ class StandardInputStream implements InputStreamInterface
      */
     private $stream;
 
+    /**
+     * StandardInputStream constructor.
+     * @param string $filename
+     * @param string $mode
+     */
     public function __construct($filename = 'php://stdin', $mode = 'r')
     {
         try {
@@ -24,6 +33,9 @@ class StandardInputStream implements InputStreamInterface
         }
     }
 
+    /**
+     * StandardInputStream destructor
+     */
     public function __destruct()
     {
         if ($this->stream !== false) {
@@ -31,7 +43,10 @@ class StandardInputStream implements InputStreamInterface
         }
     }
 
-    public function readLine(): ?string
+    /**
+     * @inheritdoc
+     */
+    public function readLine()
     {
         $string = fgets($this->stream, 4096);
         if ($string === false) {

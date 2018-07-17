@@ -2,9 +2,20 @@
 
 namespace alexeevdv\agi;
 
+/**
+ * Interface OutputStreamInterface
+ * @package alexeevdv\agi
+ */
 interface OutputStreamInterface
 {
-    public function writeLine(string $string): ?int;
+    /**
+     * @param string $string
+     * @return int|null
+     */
+    public function writeLine($string);
 
-    public function flush(): bool;
+    /**
+     * @return bool
+     */
+    public function flush();
 }

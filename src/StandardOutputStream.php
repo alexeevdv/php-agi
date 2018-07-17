@@ -5,6 +5,10 @@ namespace alexeevdv\agi;
 use Exception;
 use RuntimeException;
 
+/**
+ * Class StandardOutputStream
+ * @package alexeevdv\agi
+ */
 class StandardOutputStream implements OutputStreamInterface
 {
     /**
@@ -12,6 +16,11 @@ class StandardOutputStream implements OutputStreamInterface
      */
     private $stream;
 
+    /**
+     * StandardOutputStream constructor.
+     * @param string $filename
+     * @param string $mode
+     */
     public function __construct($filename = 'php://stdout', $mode = 'w')
     {
         try {
@@ -24,6 +33,9 @@ class StandardOutputStream implements OutputStreamInterface
         }
     }
 
+    /**
+     * StandardOutputStream destructor
+     */
     public function __destruct()
     {
         if ($this->stream !== false) {
@@ -31,7 +43,10 @@ class StandardOutputStream implements OutputStreamInterface
         }
     }
 
-    public function writeLine(string $string): ?int
+    /**
+     * @inheritdoc
+     */
+    public function writeLine($string)
     {
         $written = fwrite($this->stream, $string . "\n");
         if (!$written) {
@@ -40,7 +55,10 @@ class StandardOutputStream implements OutputStreamInterface
         return $written;
     }
 
-    public function flush(): bool
+    /**
+     * @inheritdoc
+     */
+    public function flush()
     {
         return fflush($this->stream);
     }

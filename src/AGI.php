@@ -69,7 +69,7 @@ class AGI
      * @param integer $level from 1 to 4
      * @return array, see evaluate for return information.
      */
-    public function verbose($message, $level=1)
+    public function verbose($message, $level = 1)
     {
         $this->getLogger()->debug($message);
         foreach (explode("\n", str_replace("\r\n", "\n", print_r($message, true))) as $msg) {
@@ -208,7 +208,11 @@ class AGI
         return $result['data'];
     }
 
-    function getRequestVariable($name): ?string
+    /**
+     * @param string $name
+     * @return string|null
+     */
+    function getRequestVariable($name)
     {
         if (isset($this->requestVariables[$name])) {
             return $this->requestVariables[$name];
@@ -235,7 +239,10 @@ class AGI
         return $this->evaluate("HANGUP $channel");
     }
 
-    protected function getLogger(): LoggerInterface
+    /**
+     * @return LoggerInterface
+     */
+    protected function getLogger()
     {
         return $this->logger;
     }
