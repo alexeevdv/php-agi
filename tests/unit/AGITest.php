@@ -2,10 +2,11 @@
 
 namespace tests\unit;
 
-use Codeception\Stub;
 use alexeevdv\agi\AGI;
 use alexeevdv\agi\InputStreamInterface;
 use alexeevdv\agi\OutputStreamInterface;
+use Codeception\Stub;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -15,6 +16,7 @@ use Psr\Log\LoggerInterface;
 class AGITest extends \Codeception\Test\Unit
 {
     /**
+     * @throws Exception
      * @test
      */
     public function successfulInstantiationWithoutInput()
@@ -110,6 +112,7 @@ class AGITest extends \Codeception\Test\Unit
                 $this->assertEquals('EXEC app opt', $command);
                 return ['result' => 1];
             },
+            'getLogger' => Stub::makeEmpty(LoggerInterface::class),
         ], $this);
         $value = $agi->exec('app', 'opt');
         $this->assertArrayHasKey('result', $value);
@@ -128,6 +131,7 @@ class AGITest extends \Codeception\Test\Unit
                 $this->assertEquals('EXEC app opt|opt1|opt2', $command);
                 return ['result' => 1];
             },
+            'getLogger' => Stub::makeEmpty(LoggerInterface::class),
         ], $this);
         $value = $agi->exec('app', ['opt', 'opt1', 'opt2']);
         $this->assertArrayHasKey('result', $value);
@@ -146,6 +150,7 @@ class AGITest extends \Codeception\Test\Unit
                 $this->assertEquals('VERBOSE "message" 3', $command);
                 return ['result' => 1];
             },
+            'getLogger' => Stub::makeEmpty(LoggerInterface::class),
         ], $this);
         $value = $agi->verbose("message", 3);
         $this->assertArrayHasKey('result', $value);
